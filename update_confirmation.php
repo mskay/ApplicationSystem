@@ -31,12 +31,6 @@
 	/* Closing connection */
 	$db_connection->close();
 
-	// $db = mysqli_connect('localhost', $user, $pass, $db) or die("Unable to connect");
-
-	// $sqlQuery = "update $table set name='{$name}', email='{$email}', gpa={$gpa}, year={$year}, gender='{$gender}', password='{$password}' where email='{$originalEmail}'";
-	// $result = mysqli_query($db, $sqlQuery);
-	// mysqli_close($db);
-
 	function generatePage($name, $email, $gpa, $year, $gender, $title="Main") {
 		    $page = <<<EOPAGE
 			<!doctype html>

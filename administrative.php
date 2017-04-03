@@ -25,7 +25,7 @@
 							  <option value="year">year</option>
 							  <option value="gender">gender</option>
 							</select>
-							
+							<br><br>
 							<strong>Select field to sort applications </strong><select>
 								<option value="nameSort">name</option>
 								<option value="emailSort">email</option>
@@ -33,7 +33,8 @@
 								<option value="yearSort">year</option>
 								<option value="genderSort">gender</option>
 							</select>
-							<strong>Filter condition </strong><input type="text" name="condition" value=""><br>
+							<br><br>
+							<strong>Filter condition </strong><input type="text" name="condition" value=""><br><br>
 							<input class="btn btn-default" type="submit" name="submit" value="Display Applications"/><br><br>
 							<a class="btn btn-default" href="main.html">Return to main menu</a>
 						</form>	

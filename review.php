@@ -15,64 +15,36 @@
 		if ($db_connection->connect_error) {
 			die($db_connection->connect_error);
 		}
-		/* Query */
-		$query = "select password from {$table} where email='{$email}'";
-			
-		/* Executing query */
+	
+
+		$query = "select name, email, gpa, year, gender, password from {$table} where email='{$email}'";
 		$result = $db_connection->query($query);
-		$result_pass = '';
+
 		if (!$result) {
+			unset($_SESSION['name']);
 			die("Retrieval failed: ". $db_connection->error);
 		} else {
 			/* Number of rows found */
 			$num_rows = $result->num_rows;
 			if ($num_rows === 0) {
 				unset($_SESSION['name']);
-				// echo "<h2>Fail 1 </h2>";
+				echo "<h2>No entry exists in the database for the specified email and password</h2>";
 			} else {
 				for ($row_index = 0; $row_index < $num_rows; $row_index++) {
 					$result->data_seek($row_index);
 					$recordArray = $result->fetch_array(MYSQLI_ASSOC);
-					
-					$result_pass = $recordArray['password'];
+
+					echo "hi";
+					print_r($recordArray);
+					$_SESSION['name'] = $recordArray['name'];
+					$_SESSION['email'] = $recordArray['email'];
+					$_SESSION['gpa'] = $recordArray['gpa'];
+					$_SESSION['year'] = $recordArray['year'];
+					$_SESSION['gender'] = $recordArray['gender'];
 				}
 			}
 			/* Freeing memory */
 			$result->close();
-		}
-
-		if (password_verify($password, $result_pass)) {
-			$query = "select name, email, gpa, year, gender, password from {$table} where email='{$email}'";
-			$result = $db_connection->query($query);
-
-			if (!$result) {
-				unset($_SESSION['name']);
-				die("Retrieval failed: ". $db_connection->error);
-			} else {
-				/* Number of rows found */
-				$num_rows = $result->num_rows;
-				if ($num_rows === 0) {
-					unset($_SESSION['name']);
-					// echo "<h2>Fail 2</h2>";
-				} else {
-					for ($row_index = 0; $row_index < $num_rows; $row_index++) {
-						$result->data_seek($row_index);
-						$recordArray = $result->fetch_array(MYSQLI_ASSOC);
-
-						echo "hi";
-						print_r($recordArray);
-						$_SESSION['name'] = $recordArray['name'];
-						$_SESSION['email'] = $recordArray['email'];
-						$_SESSION['gpa'] = $recordArray['gpa'];
-						$_SESSION['year'] = $recordArray['year'];
-						$_SESSION['gender'] = $recordArray['gender'];
-					}
-				}
-				/* Freeing memory */
-				$result->close();
-			}
-		} else {
-			echo "<h2>No entry exists in the database for the specified email and password</h2>";
 		}
 		
 		/* Closing connection */

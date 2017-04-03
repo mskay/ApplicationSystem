@@ -2,50 +2,28 @@
 	session_start();
 
 	$condition = $_POST['condition']
-	$email = trim($_POST['email']);
-	$password = trim($_POST['password']);
 	
 	$user = 'dbuser';
 	$pass = 'goodbyeWorld';
 	$table = "applicants";
 	$db = 'applicationdb';
 
+	/* Connecting to the database */		
+	$db_connection = new mysqli('localhost', $user, $pass, $db);
+	if ($db_connection->connect_error) {
+		die($db_connection->connect_error);
+	}
+	/* Query */
+	$query = "update $table set name='{$name}', email='{$email}', gpa={$gpa}, year={$year}, gender='{$gender}', password='{$password}' where email='{$originalEmail}'";
+			
+	/* Executing query */
+	$result = $db_connection->query($query);
+	if (!$result) {
+		die("Insertion failed: " . $db_connection->error);
+	}
 	
-	$db = connectToDB('localhost', $user, $pass, $db) or die("Unable to connect");
-	$sqlQuery = sprintf("select name, email, gpa, year, gender, password from %s where email='%s'", $table, $email);
-	$result = mysqli_query($db, $sqlQuery);
-	if ($result) {
-		$numberOfRows = mysqli_num_rows($result);
-	 	if ($numberOfRows == 0) {
-	 	 	unset($_SESSION['name']);
-			echo "<h2>No entry exists in the database for the specified email and password</h2>";
-		} else {
-			while ($recordArray = mysqli_fetch_array($result, MYSQLI_ASSOC)) {
-				$_SESSION['name'] = $recordArray['name'];
-				$_SESSION['email'] = $recordArray['email'];
-				$_SESSION['gpa'] = $recordArray['gpa'];
-				$_SESSION['year'] = $recordArray['year'];
-				$_SESSION['gender'] = $recordArray['gender'];
-				$_SESSION['password'] = $recordArray['password'];
-	     		}
-			}
-			mysqli_free_result($result);
-		}  else {
-			unset($_SESSION['name']);
-			echo "Retrieving records failed.".mysqli_error($db);
-		}
-
-		mysqli_close($db);
-	}
-
-	function connectToDB($host, $user, $password, $database) {
-		$db = mysqli_connect($host, $user, $password, $database);
-		if (mysqli_connect_errno()) {
-			echo "Connect failed.\n".mysqli_connect_error();
-			exit();
-		}
-		return $db;
-	}
+	/* Closing connection */
+	$db_connection->close();
 
 	function generatePage($title="Review") {
 		    $page = <<<EOPAGE
